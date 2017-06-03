@@ -20,9 +20,9 @@ def populate_resources(resource_file):
     with open(resource_file, "r") as resourcesFromFile:
         resource_entries = resourcesFromFile.read().split("\n\n")
         for resourceEntry in resource_entries:
-            resource_object_and_subject_and_perms = resourceEntry.split("\n")
-            resource_object = resource_object_and_subject_and_perms[0].split(":")[0]
-            resource_subjects_and_perms = [x.strip(' ').replace(' ', '') for x in resource_object_and_subject_and_perms[1:]]
+            resource_object_subject_perms = resourceEntry.split("\n")
+            resource_object = resource_object_subject_perms[0].split(":")[0]
+            resource_subjects_and_perms = [x.strip(' ').replace(' ', '') for x in resource_object_subject_perms[1:]]
             subject_and_perms = []
             for resourceSubjectAndPerms in resource_subjects_and_perms:
                 group_perms = resourceSubjectAndPerms.split(":")
@@ -43,6 +43,26 @@ def populate_groups(group_file):
     return groups
 
 
+def populate_required_membership(action, resource, resources):
+    # We populate "action_to_resource_allowed_by_members_of" array with groups authorized to perform action on
+    action_to_resource_allowed_by_members_of = []
+    for resourceIndex, groupsPrivsOfResource in enumerate(resources):
+        if groupsPrivsOfResource[0] == resource:
+            for group, privileges in groupsPrivsOfResource[1]:
+                if action in privileges:
+                    action_to_resource_allowed_by_members_of.append(group)
+    return action_to_resource_allowed_by_members_of
+
+
+def populate_membership(groups, subject):
+    # We populate "subject_is_member_of" array with groups the subject belongs to
+    subject_is_member_of = []
+    for groupIndex, userList in enumerate(groups):
+        if subject in userList[1]:
+            subject_is_member_of.append(userList[0])
+    return subject_is_member_of
+
+
 def main(group_file, resource_file, action_file):
     groups = populate_groups(group_file)
     resources = populate_resources(resource_file)
@@ -55,26 +75,15 @@ def main(group_file, resource_file, action_file):
             subject = subject_action_resource[0]
             action = subject_action_resource[1]
             resource = subject_action_resource[2]
-            subject_is_member_of = []
-            action_to_resource_allowed_by_members_of = []
+            subject_is_member_of = populate_membership(groups, subject)
+            action_to_resource_allowed_by_members_of = populate_required_membership(action, resource, resources)
 
-            # We populate "subject_is_member_of" array with groups the subject belongs to
-            for groupIndex, userList in enumerate(groups):
-                if subject in userList[1]:
-                    subject_is_member_of.append(userList[0])
-
-            # We populate "action_to_resource_allowed_by_members_of" array with groups authorized to perform action on
-            for resourceIndex, groupsPrivsOfResource in enumerate(resources):
-                if groupsPrivsOfResource[0] == resource:
-                    for group, privileges in groupsPrivsOfResource[1]:
-                        if action in privileges:
-                            action_to_resource_allowed_by_members_of.append(group)
-
-            # Compare the groups our subject is a member of to the list of groups allowed to perform the action on resource
+            # Compare the groups our subject is a member of to the groups allowed to perform the action on resource
             if [i for i in subject_is_member_of if i in action_to_resource_allowed_by_members_of]:
                 print "ALLOW " + subject + " " + action + " " + resource
             else:
                 print "DENY " + subject + " " + action + " " + resource
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
