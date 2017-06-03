@@ -75,8 +75,8 @@ def main(group_file, resource_file, action_file):
     group_data = populate_groups(group_file)
     resource_data = populate_resources(resource_file)
     try:
-        with open(action_file, "r") as actionsFromFile:  # Test permission data against attempted actions
-            action_entries = actionsFromFile.read().split("\n")
+        with open(action_file, "r") as actions_from_file:  # Test permission data against attempted actions
+            action_entries = actions_from_file.read().split("\n")
             for actionEntry in action_entries:
                 subject_action_resource = actionEntry.split()  # alice, read, /home/alice/
                 subject = subject_action_resource[0]
