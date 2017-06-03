@@ -77,8 +77,8 @@ def main(group_file, resource_file, action_file):
     try:
         with open(action_file, "r") as actions_from_file:  # Test permission data against attempted actions
             action_entries = actions_from_file.read().split("\n")
-            for actionEntry in action_entries:
-                subject_action_resource = actionEntry.split()  # alice, read, /home/alice/
+            for action_entry in action_entries:
+                subject_action_resource = action_entry.split()  # alice, read, /home/alice/
                 subject = subject_action_resource[0]
                 action = subject_action_resource[1]
                 resource = subject_action_resource[2]
