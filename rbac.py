@@ -4,17 +4,14 @@ import sys
 '''
 Author: Michael Romero
 Date: 6/2/17
-Course: CPSC 353, Summer 2017, Professor Kenytt Avery
+Course: CPSC-353, Summer 2017, Professor Kenytt Avery
 Programming Assignment 01
 '''
 
 
 def usage(script_name):
-    msg = 'Usage: %s GROUPS RESOURCE ATTEMPTS' % script_name
+    msg = 'Usage: %s GROUPS RESOURCES ATTEMPTS' % script_name
     sys.exit(msg)
-
-if len(sys.argv) != 4:
-    usage(sys.argv[0])
 
 
 def populate_resources(resource_file):
@@ -80,4 +77,7 @@ def main(group_file, resource_file, action_file):
                 print "DENY " + subject + " " + action + " " + resource
 
 if __name__ == '__main__':
+    if len(sys.argv) != 4:
+        usage(sys.argv[0])
+
     main(sys.argv[1], sys.argv[2], sys.argv[3])
