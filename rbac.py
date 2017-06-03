@@ -8,8 +8,9 @@ Course: CPSC 353, Summer 2017, Professor Kenytt Avery
 Programming Assignment 01
 '''
 
-def usage(scriptname):
-    msg = 'Usage: %s GROUPS RESOURCE ATTEMPTS' % scriptname
+
+def usage(script_name):
+    msg = 'Usage: %s GROUPS RESOURCE ATTEMPTS' % script_name
     sys.exit(msg)
 
 if len(sys.argv) != 4:
@@ -65,7 +66,7 @@ def main(group_file, resource_file, action_file):
                 if subject in userList[1]:
                     subject_is_member_of.append(userList[0])
 
-            # We populate "action_to_resource_allowed_by_members_of" array with groups authorized to perform action on resource
+            # We populate "action_to_resource_allowed_by_members_of" array with groups authorized to perform action on
             for resourceIndex, groupsPrivsOfResource in enumerate(resources):
                 if groupsPrivsOfResource[0] == resource:
                     for group, privileges in groupsPrivsOfResource[1]:
