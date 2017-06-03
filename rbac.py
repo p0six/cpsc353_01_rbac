@@ -22,7 +22,7 @@ def fail_gracefully(e, failed_file):
 def populate_groups(group_file):
     groups = []  # Parse the groupFile and create a data structure to represent it
     try:
-        with open(group_file, "r") as groupsFromFile:
+        with open(group_file, "r") as groupsFromFile:  # users: alice, bob, charlie
             for line in groupsFromFile:
                 line = line.strip().replace(' ', '')
                 groups_users = line.split(":")
@@ -35,18 +35,19 @@ def populate_groups(group_file):
 def populate_resources(resource_file):
     resources = []  # Parse the resourceFile and create a data structure to represent it
     try:
-        with open(resource_file, "r") as resourcesFromFile:
-            resource_entries = resourcesFromFile.read().split("\n\n")
-            for resourceEntry in resource_entries:
-                resource_object_subject_perms = resourceEntry.split("\n")
-                resource_object = resource_object_subject_perms[0].split(":")[0]
-                resource_subjects_and_perms = [x.strip(' ').replace(' ', '') for x in resource_object_subject_perms[1:]]
-                subject_and_perms = []
-                for resourceSubjectAndPerms in resource_subjects_and_perms:
-                    group_perms = resourceSubjectAndPerms.split(":")
-                    perms = group_perms[1].split(",")
-                    subject_and_perms.append([group_perms[0], perms])
-                resources.append([resource_object, subject_and_perms])
+        with open(resource_file, "r") as resources_from_file:
+            resource_entries = resources_from_file.read().split("\n\n")
+            for resource in resource_entries:
+                resource_lines = resource.split("\n")
+                resource_name = resource_lines[0].split(":")[0]  # /shared/project1/
+                groups_permissions_packed = [x.replace(' ', '') for x in resource_lines[1:]]  # [[users:read,execute],]
+                group_privileges = []
+                for group_permissions_packed in groups_permissions_packed:  # users:read,execute
+                    group_permissions = group_permissions_packed.split(":")
+                    group_name = group_permissions[0]
+                    permissions_list = group_permissions[1].split(",")  # read,write,execute
+                    group_privileges.append([group_name, permissions_list])
+                resources.append([resource_name, group_privileges])
     except IOError as e:
         fail_gracefully(e, resource_file)
     return resources
