@@ -22,8 +22,8 @@ def fail_gracefully(e, failed_file):
 def populate_groups(group_file):
     groups = []  # Parse the groupFile and create a data structure to represent it
     try:
-        with open(group_file, "r") as groupsFromFile:  # users: alice, bob, charlie
-            for line in groupsFromFile:
+        with open(group_file, "r") as groups_from_file:  # users: alice, bob, charlie
+            for line in groups_from_file:
                 line = line.strip().replace(' ', '')
                 groups_users = line.split(":")
                 groups.append([groups_users[0], groups_users[1].strip().split(",")])
@@ -55,9 +55,9 @@ def populate_resources(resource_file):
 
 def populate_membership(groups, subject):
     membership = []  # Populate "membership" array with groups the subject belongs to
-    for groupIndex, userList in enumerate(groups):
-        if subject in userList[1]:
-            membership.append(userList[0])
+    for groupIndex, user_list in enumerate(groups):
+        if subject in user_list[1]:
+            membership.append(user_list[0])
     return membership
 
 
