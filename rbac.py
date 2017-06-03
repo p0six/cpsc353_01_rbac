@@ -87,7 +87,7 @@ def main(group_file, resource_file, action_file):
 
                 # If subject is member of a group with permissions to perform action on resource...
                 authorization = "ALLOW" if [i for i in subject_is_member_of if i in action_allowed_by] else "DENY"
-                print authorization + " " + subject + " " + action + " " + resource
+                print "{0} {1} {2} {3}".format(authorization, subject, action, resource)
     except IOError as e:
         fail_gracefully(e, action_file)
 
