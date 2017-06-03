@@ -85,10 +85,8 @@ def main(group_file, resource_file, action_file):
                 action_allowed_by = populate_required_membership(action, resource, resource_data)
 
                 # If subject is member of a group with permissions to perform action on resource...
-                if [i for i in subject_is_member_of if i in action_allowed_by]:
-                    print "ALLOW " + subject + " " + action + " " + resource
-                else:
-                    print "DENY " + subject + " " + action + " " + resource
+                authorized = "ALLOW" if [i for i in subject_is_member_of if i in action_allowed_by] else "DENY"
+                print authorized + " " + subject + " " + action + " " + resource
     except IOError as e:
         fail_gracefully(e, action_file)
 
