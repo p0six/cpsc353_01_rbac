@@ -45,6 +45,7 @@ def populateGroups(groupFile):
 def main(groupFile, resourceFile, actionFile):
     groups = populateGroups(groupFile)
     resources = populateResources(resourceFile)
+
     # Now that we've populated our groups and resources permission data, test them against attempted actions
     with open(actionFile, "r") as actionsFromFile:
         actionEntries = actionsFromFile.read().split("\n")
