@@ -55,7 +55,8 @@ def populate_resources(resource_file):
 
 def populate_membership(groups, subject):
     membership = []  # Populate "membership" array with groups the subject belongs to
-    for groupIndex, user_list in enumerate(groups):
+    for group_index, user_list in enumerate(groups):
+        print group_index
         if subject in user_list[1]:
             membership.append(user_list[0])
     return membership
@@ -63,7 +64,7 @@ def populate_membership(groups, subject):
 
 def populate_required_membership(action, resource, resources):
     action_allowed_by = [] # We populate "action_allowed_by" array with groups authorized to perform action on
-    for resourceIndex, resource_groups_privileges in enumerate(resources):
+    for resource_index, resource_groups_privileges in enumerate(resources):
         if resource_groups_privileges[0] == resource:
             for group, privileges in resource_groups_privileges[1]:
                 if action in privileges:
