@@ -56,7 +56,6 @@ def populate_resources(resource_file):
 def populate_membership(groups, subject):
     membership = []  # Populate "membership" array with groups the subject belongs to
     for group_index, user_list in enumerate(groups):
-        print group_index
         if subject in user_list[1]:
             membership.append(user_list[0])
     return membership
