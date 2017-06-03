@@ -4,7 +4,7 @@ import sys
 '''
 Course: CPSC-353, Summer 2017, Professor Kenytt Avery
 Programming Assignment 01: Role-Based Access Control (RBAC) System
-Author: Michael Romero
+Author: Michael Romero, Josh Eden, Diego Franchi
 Date: 6/2/17
 '''
 
