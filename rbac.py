@@ -8,8 +8,6 @@ Course: CPSC 353, Summer 2017, Professor Kenytt Avery
 Programming Assignment 01
 '''
 
-# Do not assume that only allowable actions are read, write, and execute.
-
 def usage(scriptname):
     msg = 'Usage: %s GROUPS RESOURCE ATTEMPTS' % scriptname
     sys.exit(msg)
@@ -17,15 +15,7 @@ def usage(scriptname):
 if len(sys.argv) != 4:
     usage(sys.argv[0])
 
-def main(groupFile, resourceFile, actionFile):
-    # Parse the groupFile and create a data structure to represent it
-    groups = []
-    with open(groupFile, "r") as groupsFromFile:
-        for line in groupsFromFile:
-            line = line.strip().replace(' ', '')
-            groupsUsers = line.split(":")
-            groups.append([groupsUsers[0],groupsUsers[1].strip().split(",")])
-
+def populateResources(resourceFile):
     # Parse the resourceFile and create a data structure to represent it
     resources = []
     with open(resourceFile, "r") as resourcesFromFile:
@@ -38,10 +28,24 @@ def main(groupFile, resourceFile, actionFile):
             for resourceSubjectAndPerms in resourceSubjectsAndPerms:
                 groupPerms = resourceSubjectAndPerms.split(":")
                 perms = groupPerms[1].split(",")
-                subjectAndPerms.append([groupPerms[0],perms])
+                subjectAndPerms.append([groupPerms[0], perms])
             resources.append([resourceObject, subjectAndPerms])
+    return resources
 
-    # Now that we've populated our permissions data.. we can now use them.
+def populateGroups(groupFile):
+    # Parse the groupFile and create a data structure to represent it
+    groups = []
+    with open(groupFile, "r") as groupsFromFile:
+        for line in groupsFromFile:
+            line = line.strip().replace(' ', '')
+            groupsUsers = line.split(":")
+            groups.append([groupsUsers[0], groupsUsers[1].strip().split(",")])
+    return groups
+
+def main(groupFile, resourceFile, actionFile):
+    groups = populateGroups(groupFile)
+    resources = populateResources(resourceFile)
+    # Now that we've populated our groups and resources permission data, test them against attempted actions
     with open(actionFile, "r") as actionsFromFile:
         actionEntries = actionsFromFile.read().split("\n")
         for actionEntry in actionEntries:
