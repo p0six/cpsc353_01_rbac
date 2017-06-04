@@ -73,9 +73,7 @@ def populate_required_membership(action, resource, resources):
 
 def main(group_file, resource_file, action_file):
     group_data = populate_groups(group_file)
-    print group_data
     resource_data = populate_resources(resource_file)
-    print resource_data
     try:
         with open(action_file, "r") as actions_from_file:  # Test permission data against attempted actions
             action_entries = actions_from_file.read().split("\n")
