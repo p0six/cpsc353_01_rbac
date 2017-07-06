@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import re
 
 '''
 Course: CPSC-353, Summer 2017, Professor Kenytt Avery
@@ -36,7 +37,7 @@ def populate_resources(resource_file):
     resources = []  # Parse the resourceFile and create a data structure to represent it
     try:
         with open(resource_file, "r") as resources_from_file:
-            resource_entries = resources_from_file.read().split("\n\n")
+            resource_entries = re.split('\n\W+\n|\n\n', resources_from_file.read().strip())  # updated for whitespace
             for resource in resource_entries:
                 resource_lines = resource.split("\n")
                 resource_name = resource_lines[0].split(":")[0]  # /shared/project1/
@@ -45,7 +46,7 @@ def populate_resources(resource_file):
                 for group_permissions_packed in groups_permissions_packed:  # users:read,execute
                     group_permissions = group_permissions_packed.split(":")
                     group_name = group_permissions[0]
-                    permissions_list = group_permissions[1].split(",")  # read,write,execute
+                    permissions_list = group_permissions[1].split(",")  # [read,write,execute,]
                     group_privileges.append([group_name, permissions_list])
                 resources.append([resource_name, group_privileges])
     except IOError as e:
@@ -76,7 +77,7 @@ def main(group_file, resource_file, action_file):
     resource_data = populate_resources(resource_file)
     try:
         with open(action_file, "r") as actions_from_file:  # Test permission data against attempted actions
-            action_entries = actions_from_file.read().split("\n")
+            action_entries = actions_from_file.read().strip().split("\n")  # added .strip() to handle last \n
             for action_entry in action_entries:
                 subject_action_resource = action_entry.split()  # alice, read, /home/alice/
                 subject = subject_action_resource[0]
